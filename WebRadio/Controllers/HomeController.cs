@@ -66,10 +66,11 @@ namespace WebRadio.Controllers
         {
             List<RadioStation> _listRadio = (List<RadioStation>)Session["RadioList"];
 
-            if (_listRadio.Count > 0)
-                return View(_listRadio);
-            else
+            if (_listRadio is null)
                 return View(new List<RadioStation>());
+            else
+                return View(_listRadio);
+            
         }
     }
 }

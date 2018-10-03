@@ -1,21 +1,58 @@
 ﻿@model List<WebRadio.Models.RadioStation>
 
-@{    
+@{
     ViewBag.Title = "RadioList";
 }
+
+<style>
+    .wrap {
+        padding-top: 30px;
+    }
+
+    .glyphicon {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+
+    small {
+        display: block;
+        color: #888;
+    }
+
+    .well {
+        border: 1px solid blue;
+    }
+</style>
 
 <h2>RadioList</h2>
 
 @if (Model.Count > 0)
 {
-    <div class="row">
-        @foreach (var item in Model)
-        {
-            <div class="col-lg-1">
-                <img src="@item.favicon" class="img-responsive" alt="" /> 
-                <label class="label-primary">@item.name</label> 
-            </div>
-        }
+    <div class="container wrap container-fluid">
+        <div class="row-fluid">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4">
+                    <div class="well well-sm">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <img src="@item.favicon" alt="" class="img-thumbnail img-responsive" />
+                            </div>
+                            <div class="col-lg-8">
+                                <h4>@item.name</h4>
+                                <small><cite title="@item.state, @item.country">@item.state, @item.country <i class="glyphicon glyphicon-map-marker"></i></cite></small>
+                                <p>
+                                    <i class="glyphicon glyphicon-envelope"></i>@item.homepage
+                                    <br />
+                                    <i class="glyphicon glyphicon-record"></i><a href="@item.url">Play</a>
+                                    <br />
+                                    <i class="glyphicon glyphicon-book"></i>@item.language
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 }
-
