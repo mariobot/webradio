@@ -14,48 +14,79 @@ namespace WebRadio.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            string result = Util.Services.GET_V1("http://www.radio-browser.info/webservice/json/stations/bystate/caldas");
-
-            List<RadioStation> myDeserializedObjList = (List<RadioStation>)JsonConvert.DeserializeObject(result, typeof(List<RadioStation>));
-
             return View();
         }
 
         public PartialViewResult Countries()
         {
-            string result = Util.Services.GET_V1("http://www.radio-browser.info/webservice/json/countries");
+            List<Countries> myDeserializedObjList;
 
-            List<Countries> myDeserializedObjList = (List<Countries>)JsonConvert.DeserializeObject(result, typeof(List<Countries>));
+            if (Session["Countries"] is null)
+            {                
+                string result = Util.Services.GET("http://www.radio-browser.info/webservice/json/countries");                 
+                myDeserializedObjList = (List<Countries>)JsonConvert.DeserializeObject(Convert.ToString(result), typeof(List<Countries>));
+                Session["Countries"] = myDeserializedObjList;
+            }
+            else
+                myDeserializedObjList = (List<Countries>)Session["Countries"];
+            
+            return PartialView(myDeserializedObjList);
+        }
+
+        public PartialViewResult Languages()
+        {
+            List<Languages> myDeserializedObjList;
+
+            if (Session["Languages"] is null)
+            {
+                string result = Util.Services.GET("http://www.radio-browser.info/webservice/json/languages");
+                myDeserializedObjList = (List<Languages>)JsonConvert.DeserializeObject(result, typeof(List<Languages>));
+                Session["Languages"] = myDeserializedObjList;
+            }
+            else
+                myDeserializedObjList = (List<Languages>)Session["Languages"];
 
             return PartialView(myDeserializedObjList);
         }
 
         public PartialViewResult Tags()
         {
-            string result = Util.Services.GET_V1("http://www.radio-browser.info/webservice/json/tags");
+            List<Tags> myDeserializedObjList;
 
-            List<Tags> myDeserializedObjList = (List<Tags>)JsonConvert.DeserializeObject(result, typeof(List<Tags>));
+            if (Session["Tags"] is null)
+            {
+                string result = Util.Services.GET("http://www.radio-browser.info/webservice/json/tags");
+                myDeserializedObjList = (List<Tags>)JsonConvert.DeserializeObject(result, typeof(List<Tags>));
+                Session["Tags"] = myDeserializedObjList;
+            }
+            else
+                myDeserializedObjList = (List<Tags>)Session["Tags"];
 
             return PartialView(myDeserializedObjList);
         }
 
-        public ActionResult ByCountry(string id) {
+        public async Task<ActionResult> ByCountry(string id) {
 
-            string result = Util.Services.GET_V1("http://www.radio-browser.info/webservice/json/stations/bycountryexact/"+id+"");
-
+            string result = await Util.Services.GETAsync("http://www.radio-browser.info/webservice/json/stations/bycountryexact/"+id+"");
             List<RadioStation> myDeserializedObjList = (List<RadioStation>)JsonConvert.DeserializeObject(result, typeof(List<RadioStation>));
-
             Session["RadioList"] = myDeserializedObjList;
 
             return RedirectToAction("RadioList");
         }
 
-        public ActionResult ByTag(string id)
+        public async Task<ActionResult> ByTag(string id)
         {
-            string result = Util.Services.GET_V1("http://www.radio-browser.info/webservice/json/stations/bytagexact/"+id+"");
-
+            string result = await Util.Services.GETAsync("http://www.radio-browser.info/webservice/json/stations/bytagexact/"+id+"");
             List<RadioStation> myDeserializedObjList = (List<RadioStation>)JsonConvert.DeserializeObject(result, typeof(List<RadioStation>));
+            Session["RadioList"] = myDeserializedObjList;
 
+            return RedirectToAction("RadioList");
+        }
+
+        public async Task<ActionResult> ByLanguage(string id)
+        {
+            string result = await Util.Services.GETAsync("http://www.radio-browser.info/webservice/json/stations/bylanguageexact/" + id + "");
+            List<RadioStation> myDeserializedObjList = (List<RadioStation>)JsonConvert.DeserializeObject(result, typeof(List<RadioStation>));
             Session["RadioList"] = myDeserializedObjList;
 
             return RedirectToAction("RadioList");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace WebRadio.Util
@@ -15,7 +16,31 @@ namespace WebRadio.Util
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static string GET_V1(string url)
+        public static async Task<string> GETAsync(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            try
+            {
+                WebResponse response = await request.GetResponseAsync();
+                using (Stream responseStream = response.GetResponseStream())
+                {
+                    StreamReader reader = new StreamReader(responseStream, System.Text.Encoding.UTF8);
+                    return reader.ReadToEnd();
+                }
+            }
+            catch (WebException ex)
+            {
+                WebResponse errorResponse = ex.Response;
+                using (Stream responseStream = errorResponse.GetResponseStream())
+                {
+                    StreamReader reader = new StreamReader(responseStream, System.Text.Encoding.GetEncoding("utf-8"));
+                    String errorText = reader.ReadToEnd();                    
+                }
+                throw;
+            }
+        }
+
+        public static string GET(string url)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             try
@@ -33,7 +58,7 @@ namespace WebRadio.Util
                 using (Stream responseStream = errorResponse.GetResponseStream())
                 {
                     StreamReader reader = new StreamReader(responseStream, System.Text.Encoding.GetEncoding("utf-8"));
-                    String errorText = reader.ReadToEnd();                    
+                    String errorText = reader.ReadToEnd();
                 }
                 throw;
             }
@@ -70,25 +95,6 @@ namespace WebRadio.Util
                 }
                 throw;
             }
-        }
-
-        //private static List<T> CastDataToList<T>(string result) //where T : System.IComparable<T>
-        //{
-        //    JObject resultObject = JObject.Parse(result);
-
-        //    // get JSON result objects into a list
-        //    List<JToken> results = resultObject["data"].Children().ToList();
-
-        //    // serialize JSON results into .NET objects
-        //    List<T> ListaEntidades = new List<T>();
-        //    foreach (JToken item in results)
-        //    {
-        //        // JToken.ToObject is a helper method that uses JsonSerializer internally
-        //        T Entidad = item.ToObject<T>();
-        //        ListaEntidades.Add(Entidad);
-        //    }
-
-        //    return ListaEntidades;
-        //}
+        }        
     }
 }

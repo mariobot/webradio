@@ -1,12 +1,11 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "WebRadio";
 }
-
-<h2>Index</h2>
 
 @{
     Html.RenderAction("Countries", "Home");
+    Html.RenderAction("Languages", "Home");
     Html.RenderAction("Tags", "Home");
 } 
 

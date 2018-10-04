@@ -1,13 +1,13 @@
 ﻿@model List<WebRadio.Models.Countries>
 
-<h2>Contries</h2>
+<h2 class="text-center">Contries</h2>
 
 @if (Model.Count > 0)
 {
-    <div class="rowstyle">
+    <div class="row text-center">
         @foreach (var item in Model)
         {
-            <a href="@Url.Action("ByCountry",new { id=item.value })">@item.name</a>
+            <a href="@Url.Action("ByCountry",new { id=item.value })">@item.name (@item.stationcount)</a>
         }
     </div>
 }
