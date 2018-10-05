@@ -1,0 +1,45 @@
+﻿@model List<WebRadio.Models.RadioStation>
+
+@{
+    ViewBag.Title = "FavStation";
+}
+
+<h2>Favorite Stations</h2>
+
+<div class="row">
+    <table class="table-responsive">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Name</td>
+                <td>Country</td>
+                <td>Language</td>
+                <td>Delete</td>
+                <td>Player</td>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><img class="img-rounded img-responsive" src="@item.favicon" /></td>
+                    <td>@item.name</td>
+                    <td>@item.country</td>
+                    <td>@item.language</td>
+                    <td><a href="@Url.Action("DeleteRadioToFavs","Home",item)"><span class="glyphicon glyphicon-remove-sign"></span></a></td>
+                    <td>
+                        <article class="audio">
+                            <audio controls>
+                                <source src="@item.url" type="audio/mp3" />
+                                <p>Your browser does not support HTML 5 audio element</p>
+                            </audio>
+                        </article>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+

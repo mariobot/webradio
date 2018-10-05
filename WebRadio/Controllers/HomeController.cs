@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using WebRadio.Models;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
 
 namespace WebRadio.Controllers
 {
@@ -102,6 +100,49 @@ namespace WebRadio.Controllers
             else
                 return View(_listRadio);
             
+        }
+
+        public ActionResult AddRadioToFavs(RadioStation _radioStation)
+        {
+            List<RadioStation> _listFavs;
+
+            if (Session["ListFavs"] is null)
+            {
+                _listFavs = new List<RadioStation>();
+                _listFavs.Add(_radioStation);                
+            }
+            else
+            {
+                _listFavs = (List<RadioStation>)Session["ListFavs"];
+                _listFavs.Add(_radioStation);
+            }
+
+            Session["ListFavs"] = _listFavs;
+
+            return RedirectToAction("RadioList");
+        }
+
+        public ActionResult FavStation()
+        {
+            List<RadioStation> _listFavs;
+
+            if (Session["ListFavs"] is null)
+                _listFavs = new List<RadioStation>();
+            else
+                _listFavs = (List<RadioStation>)Session["ListFavs"];
+            
+            return View(_listFavs);
+        }
+
+        public ActionResult DeleteRadioToFavs(RadioStation _radioStation)
+        {
+            List<RadioStation> _listFavs;
+
+            _listFavs = (List<RadioStation>)Session["ListFavs"];
+            _listFavs.RemoveAll(r => r.id == _radioStation.id);            
+            Session["ListFavs"] = _listFavs;
+
+            return RedirectToAction("FavStation");            
         }
     }
 }
